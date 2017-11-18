@@ -1,0 +1,87 @@
+   <!DOCTYPE html>
+
+   <head>
+    <title>Bangalore Budget</title>
+    <link href="css/bootstrap.css" rel="stylesheet"> 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="angular.js"></script>
+    <script src="ngStorage.js"></script>
+ 
+
+  <script>
+    var moduleRef = angular.module('main',['ngStorage']).controller('expenseController',expenseControllerFunc);
+
+    function expenseControllerFunc($localStorage,$scope,$http){
+      this.exp = function(details){
+         var mon = details.month;
+
+         var monthNames = ["January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"];
+
+         var monthName = monthNames[mon.getMonth()];
+         var monthNo = mon.getMonth()+1;
+
+        
+        console.log(mon);       
+        console.log(monthName);       
+        console.log(monthNo);   
+        var data = {
+                month: monthName,              
+                };    
+
+        $http.post('/monthlyExpense',JSON.stringify(data),{headers: {'Content-Type': 'application/json'} })
+       .then(function (response) {
+          if (response) {
+            console.log(response);           
+          return response;
+        }
+          }, function (response) {
+          console.log("not successful")
+      });
+       
+      }
+    }
+
+      
+  </script>
+   </head>
+
+ <body ng-app ="main">     
+   <div class="container" style="background: linear-gradient(to right, olive , khaki);">
+       <div class="container-fluid" style="text-align: right;">
+            <ul class="nav nav-tabs navbar-right" > 
+                <li><a href="index.html"> <i class="fa fa-home"></i> Home</a></li>
+                <li class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Expenses<span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="daily1.html">Daily</a></li>
+                        <li><a href="monthly.html">Monthly</a></li>
+                      </ul>
+                </li>
+                <li><a href="#"> <i class="fa fa-line-chart"></i> Graphs</a></li>
+            </ul>
+        </div>
+
+        <h1 style="color: white; text-align: center;font-style: italic;font-size: 300%;font-weight: bold;font-family: monospace;">Bangalore Ledger </h1> 
+        <img src="img/le2.jpg" height="300px" width="100%" align="center">
+    </div> </div><br><br>
+
+    
+
+         <div ng-controller = "expenseController as monthly" class="container-fluid" style="color:olive; text-align:center;font-style: italic;font-family:fantasy; "> 
+
+            <div >
+               
+                <label style="color: olive ; text-align: center;font-style: italic;font-size: 150%; font-weight:900; font-family: fantasy;border-radius: 30px; background: khaki;padding: 10px;width: 300px;height: 100px;"> Select Month <br><input type="month" id="myMonth" ng-model = "monthly.month"></label> 
+                <p id="demo"></p>
+            </div>
+
+          {{monthly.month}}
+          {{ date_expression | date : format : timezone}}
+
+             <button style="color: white ; text-align: center;font-style: italic;font-size: 150%; font-weight:900; font-family: fantasy;border-radius: 25px; background: olive;padding: 10px;width: 200px;height: 70x;margin-left: 1200px;" data-ng-click="monthly.exp(monthly)"> Check Expenses</button>
+
+   </body>

@@ -1,0 +1,102 @@
+   <!DOCTYPE html>
+
+   <head>
+    <title>Bangalore Budget</title>
+    <link href="css/bootstrap.css" rel="stylesheet"> 
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="angular.js"></script>
+    <script src="ngStorage.js"></script>
+    
+     <script type="text/javascript">
+      n =  new Date();
+      y = n.getFullYear();
+      m = n.getMonth() + 1;
+      d = n.getDate();
+      finaldate = d+ "/" + m + "/" + y;
+    </script>
+
+  <script>
+    var moduleRef = angular.module('main',['ngStorage']).controller('expenseController',expenseControllerFunc);
+
+    function expenseControllerFunc($localStorage,$scope,$http){
+      this.exp = function(details){
+        this.date = finaldate;
+        this.incoming_mode = details.incoming_mode;
+        this.amount = details.amount;
+
+        console.log(this.date);
+        console.log(this.incoming_mode);
+        console.log(this.amount);
+
+        console.log(details);
+
+        $http.post('/addIncoming',JSON.stringify(details),{headers: {'Content-Type': 'application/json'} })
+       .then(function (response) {
+          if (response) {
+            console.log(response);           
+          return response;
+        }
+          }, function (response) {
+          console.log("not successful")
+      });
+      }
+    }
+
+      
+  </script>
+
+
+   </head>
+
+   <body ng-app ="main">     
+   <div class="container" style="background: linear-gradient(to right, olive , khaki);">
+       <div class="container-fluid" style="text-align: right;">
+            <ul class="nav nav-tabs navbar-right" > 
+                <li><a href="index.html"> <i class="fa fa-home"></i> Home</a></li>
+                <li class="dropdown">
+                      <a class="dropdown-toggle" data-toggle="dropdown" href="#">Expenses<span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="daily1.html">Daily</a></li>
+                        <li><a href="monthly.html">Monthly</a></li>
+                      </ul>
+                </li>
+                <li><a href="#"> <i class="fa fa-line-chart"></i> Graphs</a></li>
+            </ul>
+        </div>
+
+        <h1 style="color: white; text-align: center;font-style: italic;font-size: 300%;font-weight: bold;font-family: monospace;">Bangalore Ledger </h1> 
+        <img src="img/le1.jpg" height="300px" width="100%" align="center">
+    </div> </div><br><br>
+
+    
+
+         <div ng-controller = "expenseController as incoming" class="container-fluid" style="color:olive; text-align:center;font-style: italic;font-family:fantasy; "> 
+
+            <div class="col-md-4">
+               
+                <label style="color: olive ; text-align: center;font-style: italic;font-size: 150%; font-weight:900; font-family: fantasy;border-radius: 30px; background: khaki;padding: 10px;width: 300px;height: 100px;"> Date <br><input type="date"></label> 
+            </div>
+
+            <div class="col-md-4">
+                <label style="color: olive ; text-align: center;font-style: italic;font-size: 150%; font-weight:900; font-family: fantasy;border-radius: 30px; background: khaki;padding: 10px;width: 300px;height: 100px;"> Incoming Mode <input list="mode" ng-model="incoming.incoming_mode" ></label> 
+
+                <datalist id = "mode">
+                    <option value = "Atm Cash" ></option>
+                    <option value = "Added to Vmy's Paytm"></option>                   
+                </datalist>
+            </div>
+          
+            <div class="col-md-4">
+                <label style="color: olive ; text-align: center;font-style: italic;font-size: 150%; font-weight:900; font-family: fantasy;border-radius: 30px; background: khaki;padding: 10px;width: 300px;height: 100px"> Amount <input type="number" ng-model="incoming.amount" ></label>     <br><br><br><br>       
+            </div>
+            {{incoming.date}} <br>
+            {{incoming.heads}} <br>
+            {{incoming.amount}} <br>
+
+          <button style="color: white ; text-align: center;font-style: italic;font-size: 150%; font-weight:900; font-family: fantasy;border-radius: 25px; background: olive;padding: 10px;width: 150px;height: 70x;margin-left: 1200px;" data-ng-click="incoming.exp(incoming)"> Add Money</button>
+        </div>
+
+   </body>
